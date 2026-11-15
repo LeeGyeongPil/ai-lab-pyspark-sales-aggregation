@@ -101,7 +101,7 @@ Spark 가 스키마를 직접 지정해 CSV 를 읽고 `amount = qty * unit_pric
 ![save 출력: 월 폴더 12개, 행 수 일치, 계획의 PartitionFilters](docs/images/05-save.ko.png)
 <sub>`month=1` ~ `month=12` 폴더 12개. 다시 읽은 98,620행이 원본과 같습니다. `PartitionFilters` 는 나머지 11개 폴더를 건너뛴다는 뜻입니다.</sub>
 
-Parquet 는 CSV(4.54 MB)보다 약 2.2배 작고(2.09 MB), Spark 가 필요한 열만 읽을 수 있습니다.
+Parquet 는 CSV(4.54 MB)보다 약 2.2배 작고(2.09 MB), Spark 가 필요한 열만 읽을 수 있습니다. 데이터가 아주 적으면(예: `--rows 5000`) 월 폴더 12개의 오버헤드가 압축 이득보다 커서 Parquet 가 CSV 보다 클 수 있습니다.
 
 ### 선택: 얼마나 걸릴까? `uv run sales-agg bench`
 
@@ -182,7 +182,7 @@ spark.sql("SELECT store, month, SUM(amount) AS sales, AVG(amount) AS avg_ticket 
 | [`src/sales_agg/steps/explain.py`](src/sales_agg/steps/explain.py) | 계획에서 `Exchange` 줄을 셈 |
 | [`src/sales_agg/session.py`](src/sales_agg/session.py) | 세션 설정: UTC, 셔플 파티션 8, 로컬 임시 폴더 |
 | [`src/sales_agg/steps/timezone.py`](src/sales_agg/steps/timezone.py) | 캐시한 시각을 다른 세션 시간대로 다시 읽어 연-월 합계를 비교 |
-| [`tests/`](tests) | 실제 Spark 세션으로 도는 테스트 30개, 순수 Python 기준값과 비교 |
+| [`tests/`](tests) | 실제 Spark 세션으로 도는 테스트 34개, 순수 Python 기준값과 비교 |
 
 읽어 볼 만한 세 곳:
 
@@ -221,7 +221,7 @@ spark.sql("SELECT store, month, SUM(amount) AS sales, AVG(amount) AS avg_ticket 
 | 첫 실행이 느림 | PySpark 내려받기(~480 MB)와 JVM 시작 | 한 번만 기다리면 됩니다. 이후엔 약 2~3초 만에 시작 |
 | 다른 폴더에서 실행하면 그곳에 파일이 생김 | 출력은 현재 폴더에 씀 | `SALES_AGG_WORKDIR` 를 지정하거나 `--workdir` 를 씁니다 |
 
-테스트는 `uv run pytest -q` (30개, 1분 남짓, 실제 Spark).
+테스트는 `uv run pytest -q` (34개, 1분 남짓, 실제 Spark).
 
 ## 시리즈
 

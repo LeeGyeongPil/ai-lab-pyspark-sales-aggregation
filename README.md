@@ -103,7 +103,7 @@ Writes Parquet with one folder per month, then reads only `month = 3`.
 ![save output: 12 month folders, row counts match, PartitionFilters in the plan](docs/images/05-save.png)
 <sub>12 folders `month=1` to `month=12`. 98,620 rows read back equals the source. `PartitionFilters` means Spark skipped the other 11 folders.</sub>
 
-Parquet here is about 2.2x smaller than the CSV (2.09 MB versus 4.54 MB) and Spark can read only the columns it needs.
+Parquet here is about 2.2x smaller than the CSV (2.09 MB versus 4.54 MB) and Spark can read only the columns it needs. With very small data (for example `--rows 5000`) Parquet can be larger than the CSV, because the overhead of 12 month folders outweighs the compression gain.
 
 ### Optional: how long does it take? `uv run sales-agg bench`
 
@@ -184,7 +184,7 @@ spark.sql("SELECT store, month, SUM(amount) AS sales, AVG(amount) AS avg_ticket 
 | [`src/sales_agg/steps/explain.py`](src/sales_agg/steps/explain.py) | Counts `Exchange` lines in the plan |
 | [`src/sales_agg/session.py`](src/sales_agg/session.py) | Session settings: UTC, 8 shuffle partitions, local temp folder |
 | [`src/sales_agg/steps/timezone.py`](src/sales_agg/steps/timezone.py) | Re-reads cached instants under another session time zone and compares year-month totals |
-| [`tests/`](tests) | 30 tests against a real Spark session, compared with a pure-Python reference |
+| [`tests/`](tests) | 34 tests against a real Spark session, compared with a pure-Python reference |
 
 Three places worth reading:
 
@@ -223,7 +223,7 @@ Three places worth reading:
 | First run is slow | PySpark download (~480 MB) and JVM start | Wait once; later runs start in about 2 to 3 seconds |
 | Run from another folder writes files there | Output goes to the current folder | Set `SALES_AGG_WORKDIR` or pass `--workdir` |
 
-Run the tests with `uv run pytest -q` (30 tests, about a minute, real Spark).
+Run the tests with `uv run pytest -q` (34 tests, about a minute, real Spark).
 
 ## Series
 
