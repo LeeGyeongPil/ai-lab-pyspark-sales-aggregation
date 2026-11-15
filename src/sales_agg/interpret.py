@@ -61,11 +61,12 @@ def explain_sentences(lang: str, exchanges_plain: int, exchanges_distinct: int) 
 
 
 def save_sentences(lang: str, pruned: bool, csv_bytes: int, parquet_bytes: int) -> list[str]:
-    ratio = csv_bytes / parquet_bytes if parquet_bytes else 0.0
-    return [
-        t(lang, "i.prune" if pruned else "i.prune_missing"),
-        t(lang, "i.size", ratio=f"{ratio:.1f}"),
-    ]
+    prune = t(lang, "i.prune" if pruned else "i.prune_missing")
+    if parquet_bytes < csv_bytes:
+        return [prune, t(lang, "i.size", ratio=f"{csv_bytes / parquet_bytes if parquet_bytes else 0.0:.1f}")]
+    # Parquet is as large or larger (small data): say so instead of "smaller".
+    ratio = parquet_bytes / csv_bytes if csv_bytes else 0.0
+    return [prune, t(lang, "i.size_larger", ratio=f"{ratio:.1f}")]
 
 
 def bench_sentence(lang: str, first: tuple[int, float], last: tuple[int, float]) -> str:

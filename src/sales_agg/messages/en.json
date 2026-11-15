@@ -83,6 +83,7 @@
   "i.prune": "PartitionFilters in the plan means Spark opens only the month=3 folder and skips the other 11 (partition pruning).",
   "i.prune_missing": "No PartitionFilters found in the plan; the whole dataset would be scanned.",
   "i.size": "Parquet stores columns compressed, about {ratio}x smaller than CSV here, and lets Spark read only the columns it needs.",
+  "i.size_larger": "Parquet is about {ratio}x larger than CSV here: with so little data, the file and metadata overhead of 12 month folders outweighs the compression gain. The gap reverses as the data grows.",
 
   "bench.warmup": "Warm-up run with {rows} rows (not recorded) ...",
   "bench.row": "  {rows} rows: {total}s total",
