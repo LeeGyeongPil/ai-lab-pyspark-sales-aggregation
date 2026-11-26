@@ -60,13 +60,22 @@ def explain_sentences(lang: str, exchanges_plain: int, exchanges_distinct: int) 
     return [t(lang, "i.explain", a=exchanges_plain, b=exchanges_distinct)]
 
 
-def save_sentences(lang: str, pruned: bool, csv_bytes: int, parquet_bytes: int) -> list[str]:
-    prune = t(lang, "i.prune" if pruned else "i.prune_missing")
+def save_sentences(
+    lang: str, pruned: bool, csv_bytes: int, parquet_bytes: int, dirs: Sequence[str]
+) -> list[str]:
+    """dirs = names of the month=N folders actually written (e.g. ["month=7"])."""
+    n = len(dirs)
+    if "month=3" not in dirs:
+        prune = t(lang, "i.prune_no_month", folders=", ".join(dirs) or "-", exist="exists" if n == 1 else "exist")
+    elif pruned:
+        prune = t(lang, "i.prune", others=n - 1, folder_word="folder" if n == 2 else "folders")
+    else:
+        prune = t(lang, "i.prune_missing")
     if parquet_bytes < csv_bytes:
         return [prune, t(lang, "i.size", ratio=f"{csv_bytes / parquet_bytes if parquet_bytes else 0.0:.1f}")]
     # Parquet is as large or larger (small data): say so instead of "smaller".
     ratio = parquet_bytes / csv_bytes if csv_bytes else 0.0
-    return [prune, t(lang, "i.size_larger", ratio=f"{ratio:.1f}")]
+    return [prune, t(lang, "i.size_larger", ratio=f"{ratio:.1f}", n=n, folder_word="folder" if n == 1 else "folders")]
 
 
 def bench_sentence(lang: str, first: tuple[int, float], last: tuple[int, float]) -> str:

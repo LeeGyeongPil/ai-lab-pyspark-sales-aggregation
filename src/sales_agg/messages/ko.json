@@ -80,10 +80,11 @@
   "save.roundtrip": "Parquet 에서 다시 읽은 행 수: {back} (원본: {src})",
   "save.plan": "month = 3 만 읽을 때의 계획:",
   "save.sizes": "디스크 크기: CSV {csv} MB, Parquet {pq} MB",
-  "i.prune": "계획에 PartitionFilters 가 보이면 Spark 가 month=3 폴더만 열고 나머지 11개는 건너뛴다는 뜻입니다(파티션 가지치기).",
+  "i.prune": "계획에 PartitionFilters 가 보이면 Spark 가 month=3 폴더만 열고 나머지 {others}개는 건너뛴다는 뜻입니다(파티션 가지치기).",
+  "i.prune_no_month": "이 데이터에는 month=3 폴더가 없어, month = 3 조건으로 읽을 파일이 없습니다(있는 폴더: {folders}).",
   "i.prune_missing": "계획에서 PartitionFilters 를 찾지 못했습니다. 전체 데이터를 읽게 됩니다.",
   "i.size": "Parquet 은 열 단위로 압축해 여기서는 CSV 보다 약 {ratio}배 작고, 필요한 열만 읽을 수 있습니다.",
-  "i.size_larger": "여기서는 Parquet 이 CSV 보다 약 {ratio}배 큽니다. 데이터가 적어 월 폴더 12개의 파일·메타데이터 오버헤드가 압축 이득보다 크기 때문이며, 데이터가 커지면 역전됩니다.",
+  "i.size_larger": "여기서는 Parquet 이 CSV 보다 약 {ratio}배 큽니다. 데이터가 적어 월 폴더 {n}개의 파일·메타데이터 오버헤드가 압축 이득보다 크기 때문이며, 데이터가 커지면 역전됩니다.",
 
   "bench.warmup": "{rows}행으로 워밍업 실행 중 (기록하지 않음) ...",
   "bench.row": "  {rows}행: 합계 {total}초",

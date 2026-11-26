@@ -17,7 +17,7 @@ def test_lang_precedence_and_same_keys():
 
     fields = lambda s: {f[1] for f in string.Formatter().parse(s) if f[1]}
     for key in en:
-        assert fields(en[key]) == fields(ko[key]), key
+        assert fields(en[key]) - {"folder_word", "exist"} == fields(ko[key]), key  # English-only plural helpers
 
     # --lang wins over everything
     env = {"SALES_AGG_LANG": "ko", "LANG": "ko_KR.UTF-8"}
