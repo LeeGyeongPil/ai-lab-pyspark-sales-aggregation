@@ -186,7 +186,7 @@ spark.sql("SELECT store, month, SUM(amount) AS sales, AVG(amount) AS avg_ticket 
 | [`src/sales_agg/steps/explain.py`](src/sales_agg/steps/explain.py) | Counts `Exchange` lines in the plan |
 | [`src/sales_agg/session.py`](src/sales_agg/session.py) | Session settings: UTC, 8 shuffle partitions, local temp folder |
 | [`src/sales_agg/steps/timezone.py`](src/sales_agg/steps/timezone.py) | Re-reads cached instants under another session time zone and compares year-month totals |
-| [`tests/`](tests) | 35 tests against a real Spark session, compared with a pure-Python reference |
+| [`tests/`](tests) | 44 tests against a real Spark session, compared with a pure-Python reference |
 
 Three places worth reading:
 
@@ -225,7 +225,7 @@ Three places worth reading:
 | First run is slow | PySpark download (~480 MB) and JVM start | Wait once; later runs start in about 2 to 3 seconds |
 | Run from another folder writes files there | Output goes to the current folder | Set `SALES_AGG_WORKDIR` or pass `--workdir` |
 
-Run the tests with `uv run pytest -q` (35 tests, about a minute, real Spark).
+Run the tests with `uv run pytest -q` (44 tests, about a minute, real Spark).
 
 ## Series
 

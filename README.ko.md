@@ -184,7 +184,7 @@ spark.sql("SELECT store, month, SUM(amount) AS sales, AVG(amount) AS avg_ticket 
 | [`src/sales_agg/steps/explain.py`](src/sales_agg/steps/explain.py) | 계획에서 `Exchange` 줄을 셈 |
 | [`src/sales_agg/session.py`](src/sales_agg/session.py) | 세션 설정: UTC, 셔플 파티션 8, 로컬 임시 폴더 |
 | [`src/sales_agg/steps/timezone.py`](src/sales_agg/steps/timezone.py) | 캐시한 시각을 다른 세션 시간대로 다시 읽어 연-월 합계를 비교 |
-| [`tests/`](tests) | 실제 Spark 세션으로 도는 테스트 35개, 순수 Python 기준값과 비교 |
+| [`tests/`](tests) | 실제 Spark 세션으로 도는 테스트 44개, 순수 Python 기준값과 비교 |
 
 읽어 볼 만한 세 곳:
 
@@ -223,7 +223,7 @@ spark.sql("SELECT store, month, SUM(amount) AS sales, AVG(amount) AS avg_ticket 
 | 첫 실행이 느림 | PySpark 내려받기(~480 MB)와 JVM 시작 | 한 번만 기다리면 됩니다. 이후엔 약 2~3초 만에 시작 |
 | 다른 폴더에서 실행하면 그곳에 파일이 생김 | 출력은 현재 폴더에 씀 | `SALES_AGG_WORKDIR` 를 지정하거나 `--workdir` 를 씁니다 |
 
-테스트는 `uv run pytest -q` (35개, 1분 남짓, 실제 Spark).
+테스트는 `uv run pytest -q` (44개, 1분 남짓, 실제 Spark).
 
 ## 시리즈
 
