@@ -13,7 +13,8 @@ CODE = """
 by_store = Window.partitionBy("store").orderBy("month")
 by_month = Window.partitionBy("month").orderBy(F.desc("sales"))
 res = (monthly.withColumn("rank", F.rank().over(by_month))                    # 1 = best store
-              .withColumn("prev", F.lag("sales").over(by_store))              # last month
+              .withColumn("prev", F.when(F.lag("month").over(by_store) == F.col("month") - 1,
+                                         F.lag("sales").over(by_store)))      # last month (null if missing)
               .withColumn("mom_pct", F.round((F.col("sales") - F.col("prev")) / F.col("prev") * 100, 2))
               .withColumn("cum_sales", F.sum("sales").over(
                   by_store.rowsBetween(Window.unboundedPreceding, 0))))       # running total
@@ -29,7 +30,14 @@ def add_rank_mom_cum(monthly: DataFrame) -> DataFrame:
     by_month = Window.partitionBy("month").orderBy(F.desc("sales"))
     return (
         monthly.withColumn("rank", F.rank().over(by_month))
-        .withColumn("prev", F.lag("sales").over(by_store))
+        .withColumn(
+            "prev",
+            # only compare with the row before when it really is the previous calendar month
+            F.when(
+                F.lag("month").over(by_store) == F.col("month") - 1,
+                F.lag("sales").over(by_store),
+            ),
+        )
         .withColumn("mom_pct", F.round((F.col("sales") - F.col("prev")) / F.col("prev") * 100, 2))
         .withColumn(
             "cum_sales", F.sum("sales").over(by_store.rowsBetween(Window.unboundedPreceding, 0))

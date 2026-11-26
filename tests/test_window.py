@@ -41,3 +41,15 @@ def test_rank_mom_cum_and_rows_vs_range(sales, records):
     assert "S5" in differing_days
     # at least three stores have no closed days, so the equality half of the test is meaningful
     assert sum(1 for s in exp_ma if s not in differing_days) >= 3
+
+
+def test_mom_is_null_when_previous_month_is_missing(spark):
+    """A store with sales only in months 2 and 4 must not compare month 4 with month 2."""
+    monthly = spark.createDataFrame(
+        [("S1", 2, 100), ("S1", 4, 150), ("S1", 5, 300)], "store string, month int, sales long"
+    )
+    rows = {r.month: r for r in add_rank_mom_cum(monthly).collect()}
+    assert rows[2].mom_pct is None
+    assert rows[4].mom_pct is None and rows[4].prev is None  # month 3 is missing
+    assert rows[5].mom_pct == 100.0  # consecutive months still work
+    assert rows[5].cum_sales == 550
