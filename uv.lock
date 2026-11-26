@@ -4,7 +4,7 @@ requires-python = ">=3.11"
 
 [[package]]
 name = "ai-lab-pyspark-sales-aggregation"
-version = "0.1.2"
+version = "0.1.3"
 source = { editable = "." }
 dependencies = [
     { name = "pyspark" },
