@@ -63,6 +63,8 @@
   "aggregate.t_category": "Sales by category:",
   "aggregate.t_pivot": "Pivot: sales by store (rows) and month (columns m1..m12):",
   "i.stores": "Store {top} sold the most ({top_total}, {share}% of all sales) and {low} the least ({low_total}). The generator gave stores different size weights, so this is expected.",
+  "i.stores_single": "There is only one store ({store}, {total} in total), so there is nothing to compare between stores.",
+  "i.season_single": "There is only one month (month {month}, {total} in total), so there is no seasonal pattern to compare.",
   "i.season": "Month {best} is the strongest ({best_total}) and month {worst} the weakest ({worst_total}). The generator plants year-end growth and a weak February, and the aggregation finds it.",
 
   "window.t_rank": "Store {store}: monthly rank (1 = best store), change vs last month, running total",

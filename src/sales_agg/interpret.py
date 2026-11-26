@@ -24,12 +24,19 @@ def aggregate_sentences(lang: str, monthly: Sequence[tuple[str, int, int]]) -> l
     low = min(by_store, key=lambda s: by_store[s])
     best = max(by_month, key=lambda m: by_month[m])
     worst = min(by_month, key=lambda m: by_month[m])
-    return [
-        t(lang, "i.stores", top=top, top_total=f"{by_store[top]:,}",
-          share=f"{by_store[top] / total * 100:.1f}", low=low, low_total=f"{by_store[low]:,}"),
-        t(lang, "i.season", best=best, best_total=f"{by_month[best]:,}",
-          worst=worst, worst_total=f"{by_month[worst]:,}"),
-    ]
+    if len(by_store) == 1:
+        # Only one store: there is nothing to compare, so skip the most/least sentence.
+        stores = t(lang, "i.stores_single", store=top, total=f"{by_store[top]:,}")
+    else:
+        stores = t(lang, "i.stores", top=top, top_total=f"{by_store[top]:,}",
+                   share=f"{by_store[top] / total * 100:.1f}", low=low, low_total=f"{by_store[low]:,}")
+    if len(by_month) == 1:
+        # Only one month: no seasonality can be claimed.
+        season = t(lang, "i.season_single", month=best, total=f"{by_month[best]:,}")
+    else:
+        season = t(lang, "i.season", best=best, best_total=f"{by_month[best]:,}",
+                   worst=worst, worst_total=f"{by_month[worst]:,}")
+    return [stores, season]
 
 
 def window_sentences(

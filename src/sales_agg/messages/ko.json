@@ -63,6 +63,8 @@
   "aggregate.t_category": "카테고리별 매출:",
   "aggregate.t_pivot": "피벗: 지점(행) x 월(열 m1..m12) 매출:",
   "i.stores": "지점 {top} 이 가장 많이 팔았고({top_total}, 전체의 {share}%) {low} 가 가장 적게 팔았습니다({low_total}). 생성기가 지점마다 규모 가중치를 다르게 줬으므로 예상된 결과입니다.",
+  "i.stores_single": "지점이 {store} 하나뿐이라(합계 {total}) 지점끼리 비교할 대상이 없습니다.",
+  "i.season_single": "달이 {month}월 하나뿐이라(합계 {total}) 비교할 계절 패턴이 없습니다.",
   "i.season": "{best}월이 가장 강하고({best_total}) {worst}월이 가장 약합니다({worst_total}). 생성기가 연말 상승과 2월 부진을 심어 두었고, 집계가 그것을 찾아냈습니다.",
 
   "window.t_rank": "지점 {store}: 월별 순위(1 = 매출 1위 지점), 전월 대비 증감, 누적 매출",
