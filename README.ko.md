@@ -83,6 +83,8 @@ Spark 가 스키마를 직접 지정해 CSV 를 읽고 `amount = qty * unit_pric
 ![window 출력](docs/images/03-window.ko.png)
 <sub>지점 S2: 매달 2위, 2월 24.86% 하락, 12월까지 누적 697,155,900.</sub>
 
+바로 전달에 판매가 없는 지점은 지난달 대비가 이전 달과 비교되지 않고 `-`(null)로 표시됩니다. `--rows 10` 같은 작은 데이터에서만 보이며, 기본 100,000행은 모든 달이 있습니다.
+
 아래쪽 함정: 지점 S5 는 월요일에 쉽니다. `rowsBetween(-6, 0)` 은 최근 7개 행의 평균이라 쉬는 날을 건너뛰면 일주일보다 더 거슬러 올라갑니다. `rangeBetween(-6, 0)` 은 최근 7일 평균입니다. 실제 실행에서 S5 는 307일이 다릅니다(예: 2025-01-08 은 697,471.43 대 681,350.00).
 
 ### 5단계. 계획 보기: `uv run sales-agg explain`
@@ -182,7 +184,7 @@ spark.sql("SELECT store, month, SUM(amount) AS sales, AVG(amount) AS avg_ticket 
 | [`src/sales_agg/steps/explain.py`](src/sales_agg/steps/explain.py) | 계획에서 `Exchange` 줄을 셈 |
 | [`src/sales_agg/session.py`](src/sales_agg/session.py) | 세션 설정: UTC, 셔플 파티션 8, 로컬 임시 폴더 |
 | [`src/sales_agg/steps/timezone.py`](src/sales_agg/steps/timezone.py) | 캐시한 시각을 다른 세션 시간대로 다시 읽어 연-월 합계를 비교 |
-| [`tests/`](tests) | 실제 Spark 세션으로 도는 테스트 34개, 순수 Python 기준값과 비교 |
+| [`tests/`](tests) | 실제 Spark 세션으로 도는 테스트 35개, 순수 Python 기준값과 비교 |
 
 읽어 볼 만한 세 곳:
 
@@ -221,7 +223,7 @@ spark.sql("SELECT store, month, SUM(amount) AS sales, AVG(amount) AS avg_ticket 
 | 첫 실행이 느림 | PySpark 내려받기(~480 MB)와 JVM 시작 | 한 번만 기다리면 됩니다. 이후엔 약 2~3초 만에 시작 |
 | 다른 폴더에서 실행하면 그곳에 파일이 생김 | 출력은 현재 폴더에 씀 | `SALES_AGG_WORKDIR` 를 지정하거나 `--workdir` 를 씁니다 |
 
-테스트는 `uv run pytest -q` (34개, 1분 남짓, 실제 Spark).
+테스트는 `uv run pytest -q` (35개, 1분 남짓, 실제 Spark).
 
 ## 시리즈
 

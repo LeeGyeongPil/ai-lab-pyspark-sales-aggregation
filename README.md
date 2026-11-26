@@ -85,6 +85,8 @@ Window functions look at neighbouring rows without collapsing them: `rank()` acr
 ![window output](docs/images/03-window.png)
 <sub>Store S2: rank 2 every month, a 24.86% drop in February, running total 697,155,900 by December.</sub>
 
+If a store has no sales in the month before, the change vs last month is `-` (null) instead of being compared with an earlier month. This only shows on tiny data such as `--rows 10`; the default 100,000 rows have every month.
+
 The trap at the bottom: store S5 is closed on Mondays. `rowsBetween(-6, 0)` averages the last 7 rows, so across a closed day it reaches back more than a week. `rangeBetween(-6, 0)` averages the last 7 days. In the real run they differ on 307 days of S5 (for example 2025-01-08: 697,471.43 versus 681,350.00).
 
 ### Step 5. Explain: `uv run sales-agg explain`
@@ -184,7 +186,7 @@ spark.sql("SELECT store, month, SUM(amount) AS sales, AVG(amount) AS avg_ticket 
 | [`src/sales_agg/steps/explain.py`](src/sales_agg/steps/explain.py) | Counts `Exchange` lines in the plan |
 | [`src/sales_agg/session.py`](src/sales_agg/session.py) | Session settings: UTC, 8 shuffle partitions, local temp folder |
 | [`src/sales_agg/steps/timezone.py`](src/sales_agg/steps/timezone.py) | Re-reads cached instants under another session time zone and compares year-month totals |
-| [`tests/`](tests) | 34 tests against a real Spark session, compared with a pure-Python reference |
+| [`tests/`](tests) | 35 tests against a real Spark session, compared with a pure-Python reference |
 
 Three places worth reading:
 
@@ -223,7 +225,7 @@ Three places worth reading:
 | First run is slow | PySpark download (~480 MB) and JVM start | Wait once; later runs start in about 2 to 3 seconds |
 | Run from another folder writes files there | Output goes to the current folder | Set `SALES_AGG_WORKDIR` or pass `--workdir` |
 
-Run the tests with `uv run pytest -q` (34 tests, about a minute, real Spark).
+Run the tests with `uv run pytest -q` (35 tests, about a minute, real Spark).
 
 ## Series
 
