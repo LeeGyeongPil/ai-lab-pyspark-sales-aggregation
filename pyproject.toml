@@ -1,6 +1,6 @@
 [project]
 name = "ai-lab-pyspark-sales-aggregation"
-version = "0.1.1"
+version = "0.1.2"
 description = "Learn PySpark by aggregating synthetic sales records: totals, averages, ranks and running values, saved as Parquet (series part 1/5)."
 readme = "README.md"
 license = { text = "MIT" }
